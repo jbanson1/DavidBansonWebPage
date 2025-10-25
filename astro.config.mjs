@@ -15,13 +15,13 @@ import svelte from "@astrojs/svelte";
 export default defineConfig({
   output: 'static',  // Using static for now
   // adapter: vercel(),  // COMMENT OUT FOR NOW
-  site: "https://gianmarcocavallo.com/",
+  site: "https://DBanson.com/",
   integrations: [
     sitemap(),
     robotsTxt({
       sitemap: [
-        "https://gianmarcocavallo.com/sitemap-index.xml",
-        "https://gianmarcocavallo.com/sitemap-0.xml",
+        "https://DBanson.com/sitemap-index.xml",
+        "https://DBanson.com/sitemap-0.xml",
       ],
     }),
     solidJs(),
