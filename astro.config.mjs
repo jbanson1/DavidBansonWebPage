@@ -1,9 +1,10 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
-import netlify from "@astrojs/netlify";
+// import netlify from "@astrojs/netlify";  // REMOVE THIS LINE
 import robotsTxt from "astro-robots-txt";
 import UnoCSS from "@unocss/astro";
 import icon from "astro-icon";
+// import vercel from '@astrojs/vercel/serverless';  // COMMENT OUT FOR NOW
 
 import solidJs from "@astrojs/solid-js";
 import { remarkReadingTime } from "./src/lib/remark-reading-time.mjs";
@@ -12,6 +13,8 @@ import svelte from "@astrojs/svelte";
 
 // https://astro.build/config
 export default defineConfig({
+  output: 'static',  // Using static for now
+  // adapter: vercel(),  // COMMENT OUT FOR NOW
   site: "https://gianmarcocavallo.com/",
   integrations: [
     sitemap(),
@@ -29,8 +32,7 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkReadingTime],
   },
-  output: "server",
-  adapter: netlify({ edgeMiddleware: true }),
+  // REMOVED DUPLICATE output and adapter lines
   vite: {
     assetsInclude: "**/*.riv",
   },
