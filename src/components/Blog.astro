@@ -1,0 +1,65 @@
+---
+import Card from "./Card/index.astro";
+
+const username = "daveitt";
+let posts = [];
+
+try {
+  const res  = await fetch(`https://medium.com/feed/@${username}`);
+  const xml  = await res.text();
+
+  const items = xml.match(/<item>[\s\S]*?<\/item>/g) ?? [];
+  // Note: slice(0, 2) selects only the first two posts
+  posts = items.slice(0, 2).map((item) => {
+    const title = item.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/)?.[1]
+      ?? item.match(/<title>(.*?)<\/title>/)?.[1]
+      ?? "Untitled";
+    const link  = item.match(/<link>(.*?)<\/link>/)?.[1] ?? "#";
+    const pub   = item.match(/<pubDate>(.*?)<\/pubDate>/)?.[1];
+    const date  = pub
+      ? new Date(pub).toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "2-digit",
+        })
+      : "";
+    return { title, link, date };
+  });
+} catch (err) {
+  posts = [];
+}
+---
+
+<Card colSpan="md:col-span-1" rowSpan="md:row-span-3" title="Blog">
+  {posts.length > 0 ? (
+    <ul class="space-y-3">
+      {posts.map((post) => (
+        <li>
+          <a
+            href={post.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-red-500 transition-colors duration-200 text-sm"
+          >
+            {post.title}
+          </a>
+          {post.date && (
+            <div class="text-xs text-gray-400">{post.date}</div>
+          )}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="text-sm text-gray-400">
+      No recent posts found.
+      <a
+        href={`https://medium.com/@${username}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline hover:text-red-500 transition-colors duration-200"
+      >
+        View all on Medium
+      </a>.
+    </p>
+  )}
+</Card>

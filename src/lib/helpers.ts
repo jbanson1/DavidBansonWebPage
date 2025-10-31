@@ -1,36 +1,27 @@
+// Shortens long text and adds "..."
 export function trimText(input: string, maxLength: number = 100): string {
   if (input.length <= maxLength) return input;
   return input.substring(0, maxLength - 3) + "...";
 }
+
+// Returns the current date/time
 export function getCurrentTimeInUSA(): Date {
-  // Create a date object with the current UTC time
-  const now = new Date();
-
-  // Convert the UTC time to USA's time
-  const offsetUSA = 2; // USA is in Central European Summer Time (UTC+2), but you might need to adjust this based on Daylight Saving Time
-  now.setHours(now.getUTCHours() + offsetUSA);
-
-  return now;
+  return new Date();
 }
 
+// Formats time for Pacific Time (automatically switches PST/PDT)
 export function formatTimeForUSA(date: Date): string {
-  const options: Intl.DateTimeFormatOptions = {
-    hour: "numeric",
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Los_Angeles", // Pacific Time Zone
+    hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    hour12: true, // This will format the time in 12-hour format with AM/PM
-    timeZone: "America/Los_Angeles",
-  };
-
-  let formattedTime = new Intl.DateTimeFormat("en-US", options).format(date);
-
-  // Append the time zone abbreviation. You can automate this with libraries like `moment-timezone`.
-  // For simplicity, here I'm just appending "CET", but do remember that USA switches between CET and CEST.
-  formattedTime += " CET";
-
-  return formattedTime;
+    hour12: true,
+    timeZoneName: "short" // automatically shows PST or PDT
+  }).format(date);
 }
 
+// Formats date in Month Day, Year format
 export function formatDate(date: Date): string {
   return date.toLocaleDateString("en-US", {
     year: "numeric",

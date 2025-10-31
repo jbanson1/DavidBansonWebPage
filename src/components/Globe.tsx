@@ -9,6 +9,8 @@ const GlobeComponent = () => {
   
     "USA",
     "Ghana"
+    ,"Ivory Coast"
+    ,"Canada"
   ];
 
   onMount(() => {

@@ -5,29 +5,82 @@ import { LINKS } from "../lib/constants";
 
 <Card colSpan="md:col-span-1" rowSpan="md:row-span-4">
   <div class="h-full">
-    <header class="flex items-center">
-      <h1 class="text-white text-xl font-bold">
-        Let's start working together!
+    <header class="flex items-start">
+      <h1 class="cta-title text-white text-lg md:text-xl font-bold tracking-tight">
+        Got something in mind?
       </h1>
     </header>
-    <address class="flex flex-col mt-4">
+
+    <address class="flex flex-col mt-3 not-italic">
       <h2 class="text-gray-500">Contact Details</h2>
-      <p>DBanson@hotmail.com</p>
-      <p>California, USA</p>
+      <p>
+        <a 
+          href="mailto:dbanson@hotmail.com"
+          class="hover:text-red-500 transition-colors duration-200"
+        >
+          dbanson@hotmail.com
+        </a>
+      </p>
+      <p>Bay Area, CA</p>
     </address>
+
     <div class="flex flex-col mt-4 w-fit">
       <h2 class="text-gray-500">Socials</h2>
-      <ul>
+      <ul class="space-y-1">
         <li>
-          <a href={LINKS.linkedin} target="_blank">Linkedin</a>
+          <a 
+            href={LINKS.medium} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="hover:text-red-500 transition-colors duration-200"
+          >
+            Medium
+          </a>
         </li>
         <li>
-          <a href={LINKS.github} target="_blank">Github</a>
+          <a 
+            href="https://tryhackme.com/p/daveittt" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="hover:text-red-500 transition-colors duration-200"
+          >
+            TryHackMe
+          </a>
         </li>
         <li>
-          <a href={LINKS.medium} target="_blank">Medium</a>
+          <a 
+            href="https://discord.com/users/929044259007516784" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="hover:text-red-500 transition-colors duration-200"
+          >
+            Discord
+          </a>
         </li>
       </ul>
     </div>
   </div>
+
+  <style>
+    /* subtle red underline hover for the main heading */
+    .cta-title {
+      position: relative;
+      display: inline-block;
+    }
+
+    .cta-title::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: #ef4444; /* red-500 accent */
+      transition: width 0.25s ease-in-out;
+    }
+
+    .cta-title:hover::after {
+      width: 100%;
+    }
+  </style>
 </Card>
