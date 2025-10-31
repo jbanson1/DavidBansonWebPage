@@ -1,20 +1,17 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
-// import netlify from "@astrojs/netlify";  // REMOVE THIS LINE
 import robotsTxt from "astro-robots-txt";
 import UnoCSS from "@unocss/astro";
 import icon from "astro-icon";
-// import vercel from '@astrojs/vercel/serverless';  // COMMENT OUT FOR NOW
-
+import vercel from "@astrojs/vercel/serverless"; // ✅ Re-enabled the correct adapter
 import solidJs from "@astrojs/solid-js";
 import { remarkReadingTime } from "./src/lib/remark-reading-time.mjs";
-
 import svelte from "@astrojs/svelte";
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'static',  // Using static for now
-  // adapter: vercel(),  // COMMENT OUT FOR NOW
+  output: "server", // ✅ Needed for serverless (Vercel)
+  adapter: vercel(),
   site: "https://DBanson.com/",
   integrations: [
     sitemap(),
@@ -32,7 +29,6 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkReadingTime],
   },
-  // REMOVED DUPLICATE output and adapter lines
   vite: {
     assetsInclude: "**/*.riv",
   },
