@@ -3,14 +3,13 @@ import sitemap from "@astrojs/sitemap";
 import robotsTxt from "astro-robots-txt";
 import UnoCSS from "@unocss/astro";
 import icon from "astro-icon";
-import vercel from "@astrojs/vercel/serverless"; // ✅ Re-enabled the correct adapter
+import vercel from "@astrojs/vercel";
 import solidJs from "@astrojs/solid-js";
 import { remarkReadingTime } from "./src/lib/remark-reading-time.mjs";
 import svelte from "@astrojs/svelte";
 
-// https://astro.build/config
 export default defineConfig({
-  output: "server", // ✅ Needed for serverless (Vercel)
+  output: "server",
   adapter: vercel(),
   site: "https://DBanson.com/",
   integrations: [
