@@ -3,14 +3,13 @@ import sitemap from "@astrojs/sitemap";
 import robotsTxt from "astro-robots-txt";
 import UnoCSS from "@unocss/astro";
 import icon from "astro-icon";
-import vercel from "@astrojs/vercel";
 import solidJs from "@astrojs/solid-js";
-import { remarkReadingTime } from "./src/lib/remark-reading-time.mjs";
 import svelte from "@astrojs/svelte";
+import { remarkReadingTime } from "./src/lib/remark-reading-time.mjs";
 
 export default defineConfig({
-  output: "server",
-  adapter: vercel(),
+  // Static export = no serverless functions
+  output: "static",
   site: "https://DBanson.com/",
   integrations: [
     sitemap(),
