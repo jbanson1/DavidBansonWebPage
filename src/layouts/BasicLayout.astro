@@ -103,9 +103,44 @@ const schema =
       set:html={JSON.stringify(schema)}
       type="application/ld+json"
     />
+    <script is:inline>
+      {
+        `(function () {
+          const root = document.documentElement;
+          const storageKey = 'theme';
+          const supportsMatchMedia = typeof window.matchMedia === 'function';
+          const prefersDark = supportsMatchMedia ? window.matchMedia('(prefers-color-scheme: dark)').matches : false;
+          let theme = prefersDark ? 'dark' : 'light';
+
+          try {
+            const stored = localStorage.getItem(storageKey);
+            if (stored === 'light' || stored === 'dark') {
+              theme = stored;
+            }
+          } catch (_) {
+            /* ignore storage errors */
+          }
+
+          const apply = (value) => {
+            const themeValue = value === 'dark' ? 'dark' : 'light';
+            root.classList.remove('light', 'dark');
+            root.classList.add(themeValue);
+            root.setAttribute('data-theme', themeValue);
+            try {
+              root.style.colorScheme = themeValue;
+            } catch (_) {
+              /* ignore color-scheme assignment errors */
+            }
+          };
+
+          apply(theme);
+        })();`
+      }
+    </script>
+    <script type="module" src="/src/scripts/theme-toggle.ts"></script>
   </head>
   <body
-    class="bg-darkslate-700 md:h-screen flex flex-col justify-center items-center"
+    class="md:h-screen flex flex-col justify-center items-center"
   >
     <slot name="loader" />
     <slot />
@@ -130,10 +165,63 @@ const schema =
     font-weight: 100 1000;
   }
 
+  :root {
+    color-scheme: light;
+    --color-background: #f5f5f5;
+    --color-surface: #ffffff;
+    --color-surface-hover: #f0f0f0;
+    --color-border: #e5e5e5;
+    --color-text: #171717;
+    --color-text-muted: #4b5563;
+    --color-button-bg: #ffffff;
+    --color-icon: #111111;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --color-background: #111111;
+      --color-surface: #171717;
+      --color-surface-hover: #1f1f1f;
+      --color-border: #2c2c2c;
+      --color-text: #f5f5f5;
+      --color-text-muted: #a3a3a3;
+      --color-button-bg: #171717;
+      --color-icon: #f5f5f5;
+    }
+  }
+
+  :root.light {
+    color-scheme: light;
+    --color-background: #f5f5f5;
+    --color-surface: #ffffff;
+    --color-surface-hover: #f0f0f0;
+    --color-border: #e5e5e5;
+    --color-text: #171717;
+    --color-text-muted: #4b5563;
+    --color-button-bg: #ffffff;
+    --color-icon: #111111;
+  }
+
+  :root.dark {
+    color-scheme: dark;
+    --color-background: #111111;
+    --color-surface: #171717;
+    --color-surface-hover: #1f1f1f;
+    --color-border: #2c2c2c;
+    --color-text: #f5f5f5;
+    --color-text-muted: #a3a3a3;
+    --color-button-bg: #171717;
+    --color-icon: #f5f5f5;
+  }
+
   body {
     margin: 0;
     font-family: "Satoshi", sans-serif;
     -webkit-font-smoothing: antialiased;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   h1,
@@ -150,5 +238,109 @@ const schema =
 
   b {
     font-weight: 700 !important;
+  }
+
+  .card {
+    background-color: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .card a {
+    color: inherit;
+  }
+
+  .card .text-gray-400,
+  .card .text-gray-500 {
+    color: var(--color-text-muted);
+  }
+
+  .card .text-white,
+  .card .text-gray-200 {
+    color: var(--color-text);
+  }
+
+  .custom-btn {
+    background-color: var(--color-button-bg);
+    color: var(--color-icon);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .custom-btn .theme-icon {
+    color: var(--color-icon);
+    transition: color 0.3s ease;
+  }
+
+  .loader {
+    background-color: var(--color-background);
+    color: var(--color-text);
+  }
+
+  .theme-chip {
+    background-color: var(--color-button-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .theme-chip:hover {
+    background-color: var(--color-surface-hover);
+  }
+
+  .text-muted {
+    color: var(--color-text-muted);
+  }
+
+  .theme-prose {
+    color: var(--color-text);
+  }
+
+  .theme-prose :where(p, li, h1, h2, h3, h4, h5, h6, strong, em, span, code) {
+    color: var(--color-text);
+  }
+
+  .theme-prose :where(a) {
+    color: inherit;
+  }
+
+  .theme-prose :where(pre, code) {
+    background-color: var(--color-surface-hover);
+  }
+
+  #theme-toggle .icon-on {
+    display: none;
+  }
+
+  #theme-toggle .icon-off {
+    display: inline;
+  }
+
+  .light #theme-toggle .icon-on {
+    display: inline;
+  }
+
+  .dark #theme-toggle .icon-off {
+    display: inline;
+  }
+
+  .light #theme-toggle .icon-off,
+  .dark #theme-toggle .icon-on {
+    display: none;
+  }
+
+  @media (prefers-color-scheme: light) {
+    html:not(.light):not(.dark) #theme-toggle .icon-on {
+      display: inline;
+    }
+    html:not(.light):not(.dark) #theme-toggle .icon-off {
+      display: none;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html:not(.light):not(.dark) #theme-toggle .icon-off {
+      display: inline;
+    }
   }
 </style>

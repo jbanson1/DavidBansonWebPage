@@ -44,13 +44,13 @@ try {
             {post.title}
           </a>
           {post.date && (
-            <div class="text-xs text-gray-400">{post.date}</div>
+            <div class="text-xs text-muted">{post.date}</div>
           )}
         </li>
       ))}
     </ul>
   ) : (
-    <p class="text-sm text-gray-400">
+    <p class="text-sm text-muted">
       No recent posts found.
       <a
         href={`https://medium.com/@${username}`}
