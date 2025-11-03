@@ -1,8 +1,6 @@
-type Theme = "light" | "dark";
-
 const storageKey = "theme";
 
-const getStoredPreference = (): Theme | null => {
+const getStoredPreference = () => {
   try {
     const stored = localStorage.getItem(storageKey);
     if (stored === "light" || stored === "dark") {
@@ -14,16 +12,16 @@ const getStoredPreference = (): Theme | null => {
   return null;
 };
 
-const systemPrefersDark = (): boolean => {
+const systemPrefersDark = () => {
   if (typeof window.matchMedia !== "function") {
     return false;
   }
   return window.matchMedia("(prefers-color-scheme: dark)").matches;
 };
 
-const updateToggleControls = (theme: Theme) => {
+const updateToggleControls = (theme) => {
   const isDark = theme === "dark";
-  document.querySelectorAll<HTMLElement>("[data-theme-toggle]").forEach((btn) => {
+  document.querySelectorAll("[data-theme-toggle]").forEach((btn) => {
     btn.setAttribute("aria-pressed", isDark ? "true" : "false");
     btn.setAttribute(
       "aria-label",
@@ -32,9 +30,9 @@ const updateToggleControls = (theme: Theme) => {
   });
 };
 
-const applyTheme = (theme: Theme, persist: boolean) => {
+const applyTheme = (theme, persist) => {
   const root = document.documentElement;
-  const themeValue: Theme = theme === "dark" ? "dark" : "light";
+  const themeValue = theme === "dark" ? "dark" : "light";
 
   root.classList.remove("light", "dark");
   root.classList.add(themeValue);
@@ -57,11 +55,11 @@ const applyTheme = (theme: Theme, persist: boolean) => {
   }
 };
 
-const init = () => {
+const initThemeToggle = () => {
   const root = document.documentElement;
   let storedPreference = getStoredPreference();
 
-  const initialTheme: Theme =
+  const initialTheme =
     storedPreference ||
     (root.classList.contains("dark")
       ? "dark"
@@ -73,7 +71,7 @@ const init = () => {
 
   applyTheme(initialTheme, false);
 
-  const handlePreferenceChange = (event: MediaQueryListEvent) => {
+  const handlePreferenceChange = (event) => {
     if (storedPreference) return;
     applyTheme(event.matches ? "dark" : "light", false);
   };
@@ -93,29 +91,26 @@ const init = () => {
   }
 
   document.addEventListener("click", (event) => {
-    const target = (event.target as HTMLElement | null)?.closest<HTMLElement>(
-      "[data-theme-toggle]",
-    );
+    const target = event.target.closest("[data-theme-toggle]");
     if (!target) return;
 
     event.preventDefault();
 
-    const nextTheme: Theme = root.classList.contains("dark") ? "light" : "dark";
+    const nextTheme = root.classList.contains("dark") ? "light" : "dark";
     storedPreference = nextTheme;
     applyTheme(nextTheme, true);
   });
 
   document.addEventListener("astro:after-swap", () => {
-    const currentTheme: Theme = root.classList.contains("dark") ? "dark" : "light";
+    const currentTheme = root.classList.contains("dark") ? "dark" : "light";
     updateToggleControls(currentTheme);
   });
 
-  // Ensure freshly rendered buttons have correct aria state.
   updateToggleControls(initialTheme);
 };
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init, { once: true });
+  document.addEventListener("DOMContentLoaded", initThemeToggle, { once: true });
 } else {
-  init();
+  initThemeToggle();
 }
