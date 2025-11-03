@@ -1,5 +1,6 @@
 ---
 import { LINKS } from "../lib/constants";
+import themeToggleScript from "../scripts/theme-toggle.ts?url";
 
 interface Props {
   title: string;
@@ -137,7 +138,7 @@ const schema =
         })();`
       }
     </script>
-    <script type="module" src="/src/scripts/theme-toggle.ts"></script>
+    <script type="module" src={themeToggleScript}></script>
   </head>
   <body
     class="md:h-screen flex flex-col justify-center items-center"
