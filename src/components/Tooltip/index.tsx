@@ -1,3 +1,4 @@
+// Changelog: Theme-aware tooltip styling and keyboard support for emoji easter-egg button.
 import { type JSX, Show, createSignal } from "solid-js";
 
 type Props = {
@@ -63,12 +64,23 @@ function Tooltip(props: Props) {
         onTouchEnd={() => {
           setIsVisible(false);
         }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setIsVisible(!isVisible());
+            if (isVisible()) {
+              setClickCount((count) => count + 1);
+            }
+          }
+        }}
+        onBlur={() => setIsVisible(false)}
+        onKeyUp={() => setIsVisible(false)}
       >
         {props.children}
       </div>
 
       <Show when={isVisible()}>
-        <div class="absolute left-1/2 -translate-x-1/2 -translate-y-24 mt-1 w-auto max-h-[70px] p-2 bg-black text-white text-center rounded-lg z-10 shadow-custom shadow-primary-500 border border-primary-500 whitespace-normal after:content-[''] after:block after:rotate-45 after:w-4 after:h-4 after:shadow-custom after:shadow-primary-500 after:absolute after:-bottom-2 after:-translate-x-1/2 after:left-1/2 after:bg-black after:z-20">
+        <div class="tooltip-bubble absolute left-1/2 -translate-x-1/2 -translate-y-24 mt-1 w-max max-w-[220px] p-2 text-center rounded-lg z-10 whitespace-normal after:content-[''] after:block after:rotate-45 after:w-4 after:h-4 after:absolute after:-bottom-2 after:-translate-x-1/2 after:left-1/2 after:z-20">
           <p class="w-max">{currentMessage()}</p>
         </div>
       </Show>

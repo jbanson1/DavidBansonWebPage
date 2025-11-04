@@ -3,6 +3,7 @@ import Card from "./Card/index.astro";
 import { LINKS } from "../lib/constants";
 ---
 
+<!-- Changelog: Restored contact link hover/focus styling with accent color and motion-aware transitions. -->
 <Card colSpan="md:col-span-1" rowSpan="md:row-span-4">
   <div class="h-full">
     <header class="flex items-start">
@@ -16,7 +17,7 @@ import { LINKS } from "../lib/constants";
       <p>
         <a 
           href="mailto:dbanson@hotmail.com"
-          class="hover:text-red-500 transition-colors duration-200"
+          class="contact-link"
         >
           dbanson@hotmail.com
         </a>
@@ -32,7 +33,7 @@ import { LINKS } from "../lib/constants";
             href={LINKS.medium} 
             target="_blank" 
             rel="noopener noreferrer"
-            class="hover:text-red-500 transition-colors duration-200"
+            class="contact-link"
           >
             Medium
           </a>
@@ -42,7 +43,7 @@ import { LINKS } from "../lib/constants";
             href="https://tryhackme.com/p/daveittt" 
             target="_blank" 
             rel="noopener noreferrer"
-            class="hover:text-red-500 transition-colors duration-200"
+            class="contact-link"
           >
             TryHackMe
           </a>
@@ -52,7 +53,7 @@ import { LINKS } from "../lib/constants";
             href="https://discord.com/users/929044259007516784" 
             target="_blank" 
             rel="noopener noreferrer"
-            class="hover:text-red-500 transition-colors duration-200"
+            class="contact-link"
           >
             Discord
           </a>
@@ -62,6 +63,7 @@ import { LINKS } from "../lib/constants";
   </div>
 
   <style>
+    /* Changelog: Restored branded hover/focus styling for contact links with motion-aware transitions. */
     /* subtle red underline hover for the main heading */
     .cta-title {
       position: relative;
@@ -81,6 +83,32 @@ import { LINKS } from "../lib/constants";
 
     .cta-title:hover::after {
       width: 100%;
+    }
+
+    .contact-link {
+      position: relative;
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-color: transparent;
+      transition: color 200ms ease, text-decoration-color 200ms ease, outline-color 200ms ease;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .contact-link {
+        transition: none;
+      }
+    }
+
+    .contact-link:hover,
+    .contact-link:focus-visible {
+      color: var(--color-accent);
+      text-decoration-color: var(--color-accent);
+    }
+
+    .contact-link:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 3px;
+      border-radius: 2px;
     }
   </style>
 </Card>
