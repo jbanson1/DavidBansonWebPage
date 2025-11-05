@@ -1,4 +1,7 @@
 ---
+/**
+ * Changelog: Restored blog link hover glow and hardened Medium feed links with guid fallback.
+ */
 import Card from "./Card/index.astro";
 
 const username = "daveitt";
@@ -14,7 +17,13 @@ try {
     const title = item.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/)?.[1]
       ?? item.match(/<title>(.*?)<\/title>/)?.[1]
       ?? "Untitled";
-    const link  = item.match(/<link>(.*?)<\/link>/)?.[1] ?? "#";
+    let link  = item.match(/<link>(.*?)<\/link>/)?.[1] ?? "";
+    if (!link || link === "#") {
+      link = item.match(/<guid.*?>(.*?)<\/guid>/)?.[1] ?? "";
+    }
+    if (link && !/^https?:\/\//i.test(link)) {
+      link = `https://${link.replace(/^\/+/, "")}`;
+    }
     const pub   = item.match(/<pubDate>(.*?)<\/pubDate>/)?.[1];
     const date  = pub
       ? new Date(pub).toLocaleDateString(undefined, {
@@ -39,7 +48,7 @@ try {
             href={post.link}
             target="_blank"
             rel="noopener noreferrer"
-            class="hover:text-red-500 transition-colors duration-200 text-sm"
+            class="blog-link text-sm"
           >
             {post.title}
           </a>
@@ -63,3 +72,33 @@ try {
     </p>
   )}
 </Card>
+
+<style>
+  /* Blog link hover/focus glow scoped to Blog card */
+  .blog-link {
+    position: relative;
+    display: inline-block;
+    color: inherit;
+    text-decoration: none;
+    transition: color 160ms ease, text-shadow 160ms ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blog-link {
+      transition: none;
+    }
+  }
+
+  .blog-link:hover,
+  .blog-link:focus-visible {
+    color: var(--color-accent);
+    text-shadow: 0 0 8px rgba(230, 57, 70, 0.45);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--color-accent) 70%, transparent);
+  }
+
+  .blog-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+</style>

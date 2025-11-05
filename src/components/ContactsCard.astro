@@ -90,7 +90,8 @@ import { LINKS } from "../lib/constants";
       color: inherit;
       text-decoration: underline;
       text-decoration-color: transparent;
-      transition: color 200ms ease, text-decoration-color 200ms ease, outline-color 200ms ease;
+      transition: color 160ms ease, text-decoration-color 160ms ease, text-shadow 160ms ease, outline-color 160ms ease;
+      text-shadow: none;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -103,6 +104,8 @@ import { LINKS } from "../lib/constants";
     .contact-link:focus-visible {
       color: var(--color-accent);
       text-decoration-color: var(--color-accent);
+      text-shadow: 0 0 8px rgba(230, 57, 70, 0.45);
+      text-shadow: 0 0 8px color-mix(in srgb, var(--color-accent) 70%, transparent);
     }
 
     .contact-link:focus-visible {
