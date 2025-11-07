@@ -10,13 +10,13 @@ import { remarkReadingTime } from "./src/lib/remark-reading-time.mjs";
 export default defineConfig({
   // Static export = no serverless functions
   output: "static",
-  site: "https://DBanson.com/",
+  site: "https://www.davidbanson.com",
   integrations: [
     sitemap(),
     robotsTxt({
       sitemap: [
-        "https://DBanson.com/sitemap-index.xml",
-        "https://DBanson.com/sitemap-0.xml",
+        "https://www.davidbanson.com/sitemap-index.xml",
+        "https://www.davidbanson.com/sitemap-0.xml",
       ],
     }),
     solidJs(),
