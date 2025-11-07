@@ -13,7 +13,7 @@ type Props = {
 const { title, description, pubDate, minutesRead, url } = Astro.props;
 ---
 
-<BasicLayout description={description} page="blog" slug={url} title={title}>
+<BasicLayout description={description} page="blog" slug={url} title={title} url={url}>
   <main class="mx-auto max-w-3xl w-full h-screen p-8">
     <a
       class="theme-chip px-4 py-2 rounded-lg mb-8 transition-colors duration-200"

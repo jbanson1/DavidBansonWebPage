@@ -1,19 +1,52 @@
 ---
 import { LINKS } from "../lib/constants";
 
+{/*
+  SEO notes:
+  - BasicLayout.astro owns all page meta/head content. Pass title/description/image/url props from pages or higher layouts to override defaults.
+  - Layout.astro and LayoutBlogPost.astro wrap this layout without injecting additional meta tags.
+  - Page-level descriptions/titles should be supplied via layout props instead of in-page meta tags.
+*/}
+
 interface Props {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
+  image?: string;
+  url?: string;
   page?: "travel" | "blog";
   slug?: string | undefined;
   pubDate?: string;
 }
 
-const { title, description, page, pubDate } = Astro.props;
-const image =
-  page === "travel"
-    ? `${Astro.url.origin}/globe_preview.webp"`
-    : `${Astro.url.origin}/og-image.png`;
+const site = "https://www.davidbanson.com";
+
+const {
+  title = "David Banson | Portfolio",
+  description = "Personal portfolio by David Banson. Projects, writing, and ways to connect.",
+  image,
+  url,
+  page,
+  slug,
+  pubDate,
+} = Astro.props;
+
+const fallbackImage = image ?? (page === "travel" ? "/globe_preview.webp" : "/og-image.png");
+const ogImage = fallbackImage.startsWith("http")
+  ? fallbackImage
+  : `${site}${fallbackImage.startsWith("/") ? fallbackImage : `/${fallbackImage}`}`;
+
+const slugUrl =
+  slug && slug.startsWith("http")
+    ? slug
+    : slug
+      ? `${site}${slug.startsWith("/") ? slug : `/${slug}`}`
+      : undefined;
+const canonical =
+  url && url.startsWith("http")
+    ? url
+    : url
+      ? `${site}${url.startsWith("/") ? url : `/${url}`}`
+      : slugUrl ?? site;
 
 const schema =
   page !== "blog"
@@ -21,9 +54,9 @@ const schema =
         "@context": "http://schema.org",
         "@type": "Person",
         name: "David",
-        url: Astro.url.origin,
+        url: canonical,
         sameAs: [LINKS.linkedin, LINKS.github],
-        image: `${Astro.url.origin}/og-image.png`,
+        image: ogImage,
         jobTitle: "Freelance Frontend Developer",
         worksFor: {
           "@type": "Organization",
@@ -44,15 +77,15 @@ const schema =
         "@type": "BlogPosting",
         mainEntityOfPage: {
           "@type": "WebPage",
-          "@id": Astro.url.href,
+          "@id": canonical,
         },
         headline: title || title,
         description: description || title,
-        image: `${Astro.url.origin}/og-image.png`, //TODO: dynamic
+        image: ogImage, //TODO: dynamic
         author: {
           "@type": "Person",
           name: "David",
-          url: Astro.url.origin,
+          url: canonical,
           sameAs: [LINKS.linkedin, LINKS.github],
         },
         publisher: {
@@ -60,7 +93,7 @@ const schema =
           name: "David       ",
           logo: {
             "@type": "ImageObject",
-            url: `${Astro.url.origin}/og-image.png`,
+            url: ogImage,
           },
         },
         datePublished: pubDate || new Date().toISOString(),
@@ -71,7 +104,7 @@ const schema =
 <!-- Changelog: Restored scoped accent variables and refreshed contact/tooltip styling for theme fidelity. -->
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta content="width=device-width" name="viewport" />
     <link href="/favicon.ico" rel="icon" type="image/x-icon" />
@@ -79,23 +112,18 @@ const schema =
     <title>{title}</title>
     <meta content={description} name="description" />
     <meta content="index, follow" name="robots" />
-    <!-- Basic OG tags for sharing your website's content on platforms like Facebook and LinkedIn -->
+    <link href={canonical} rel="canonical" />
+    <meta content="website" property="og:type" />
+    <meta content={canonical} property="og:url" />
     <meta content={title} property="og:title" />
     <meta content={description} property="og:description" />
-    <meta content="website" property="og:type" />
-    <meta content={Astro.url.origin} property="og:url" />
-    <meta
-      content={image || `${Astro.url.origin}/og-image.png`}
-      property="og:image"
-    />
-    <!-- Basic Twitter Card tags -->
+    <meta content={ogImage} property="og:image" />
+    <meta content="1200" property="og:image:width" />
+    <meta content="630" property="og:image:height" />
     <meta content="summary_large_image" name="twitter:card" />
     <meta content={title} name="twitter:title" />
     <meta content={description} name="twitter:description" />
-    <meta
-      content={image || `${Astro.url.origin}/og-image.png`}
-      name="twitter:image"
-    />
+    <meta content={ogImage} name="twitter:image" />
 
     <link href="https://cdn.fontshare.com" rel="preconnect" />
     <link href={Astro.url.href} rel="canonical" />
